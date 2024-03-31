@@ -1,0 +1,41 @@
+asyncapi: 3.0.0
+info:
+  title: Stock Price Update API
+  version: 1.0.0
+servers:
+  mqtt:
+    host: broker.emqx.io
+
+    protocol: mqtt
+channels:
+  stock-prices:
+    address: stock-prices
+    messages:
+      publishStockPrices.message:
+        $ref: '#/components/messages/stockPrice'
+operations:
+  publishStockPrices:
+    action: receive
+    channel:
+      $ref: '#/channels/stock-prices'
+    summary: Stock price updates channel
+    messages:
+      - $ref: '#/channels/stock-prices/messages/publishStockPrices.message'
+components:
+  messages:
+    stockPrice:
+      name: stockPrice
+      title: Stock Price
+      payload:
+        $ref: '#/components/schemas/stockPrice'
+  schemas:
+    stockPrice:
+      type: object
+      properties:
+        symbol:
+          type: string
+        price:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
